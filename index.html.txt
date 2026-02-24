@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADNOC Value Investing | Interactive Report</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Modern Reset & Smooth Scrolling */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f6f9;
+            color: #2c3e50;
+            line-height: 1.6;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* --- Color Variables --- */
+        :root {
+            --primary-blue: #004b87;
+            --accent-gold: #b28938;
+            --light-gold: #fdfaf2;
+            --white: #ffffff;
+            --gray-light: #ecf0f1;
+            --gray-text: #596275;
+            --shadow: 0 8px 30px rgba(0, 75, 135, 0.08);
+        }
+
+        /* --- Fixed Sidebar Navigation --- */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--primary-blue) 0%, #002e54 100%);
+            color: var(--white);
+            position: fixed;
+            padding: 40px 0;
+            z-index: 100;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-brand {
+            padding: 0 30px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .sidebar-brand h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-links { list-style: none; padding: 0 15px; }
+
+        .nav-links li { margin-bottom: 8px; }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-links a i {
+            margin-right: 12px;
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(178, 137, 56, 0.15);
+            color: var(--white);
+            transform: translateX(4px);
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            margin-left: 280px;
+            width: calc(100% - 280px);
+            background-color: #f4f6f9;
+        }
+
+        /* Cinematic Hero Section */
+        .hero {
+            background: linear-gradient(to right, rgba(0, 75, 135, 0.9), rgba(0, 75, 135, 0.7)), url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 80px;
+            color: var(--white);
+            border-bottom: 5px solid var(--accent-gold);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: var(--light-gold);
+            max-width: 600px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        /* Content Container */
+        .content-container {
+            padding: 60px 80px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Data Visualization Card (Placeholder) */
+        .data-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 50px;
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .data-card-text { flex: 1; padding-right: 30px; }
+        .data-card-text h4 { color: var(--primary-blue); font-size: 1.2rem; margin-bottom: 10px; }
+        .data-card-text p { color: var(--gray-text); font-size: 0.95rem; }
+        
+        .data-card-visual {
+            width: 250px;
+            height: 150px;
+            background: var(--light-gold);
+            border: 1px dashed var(--accent-gold);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-gold);
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* --- Section Styling --- */
+        .qa-section {
+            margin-bottom: 70px;
+            scroll-margin-top: 60px;
+        }
+
+        .qa-section h3 {
+            font-size: 1.6rem;
+            color: var(--primary-blue);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+        }
+
+        .qa-section h3::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--gray-light);
+            margin-left: 20px;
+        }
+
+        /* --- Interactive Accordion --- */
+        .accordion-item {
+            background-color: var(--white);
+            border-radius: 10px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .accordion-item:hover {
+            box-shadow: var(--shadow);
+            border-color: rgba(178, 137, 56, 0.3);
+        }
+
+        .accordion-btn {
+            width: 100%;
+            background: transparent;
+            color: var(--primary-blue);
+            padding: 22px 30px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-align: left;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            transition: color 0.3s ease;
+        }
+
+        .accordion-btn span { padding-right: 20px; line-height: 1.4; }
+
+        .accordion-icon {
+            min-width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--light-gold);
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .accordion-btn.active .accordion-icon {
+            background: var(--primary-blue);
+            color: var(--white);
+            transform: rotate(135deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            background-color: var(--white);
+        }
+
+        .accordion-content-inner {
+            padding: 0 30px 25px 30px;
+            color: var(--gray-text);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            border-top: 1px solid var(--gray-light);
+            margin-top: -10px;
+            padding-top: 20px;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .sidebar { width: 80px; padding: 30px 0; }
+            .sidebar-brand h2 { font-size: 0.8rem; }
+            .nav-links span.nav-text { display: none; }
+            .nav-links a { justify-content: center; padding: 15px; }
+            .nav-links a i { margin-right: 0; font-size: 1.4rem; }
+            .main-content { margin-left: 80px; width: calc(100% - 80px); }
+            .hero { padding: 60px 40px; }
+            .content-container { padding: 40px; }
+            .data-card { flex-direction: column; text-align: center; }
+            .data-card-text { padding-right: 0; margin-bottom: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <h2>Al Ramz</h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#general" class="active"><i class="fa-solid fa-compass"></i> <span class="nav-text">General Strategy</span></a></li>
+            <li><a href="#uae-markets"><i class="fa-solid fa-building-columns"></i> <span class="nav-text">UAE Markets & ADNOC</span></a></li>
+            <li><a href="#gold"><i class="fa-solid fa-coins"></i> <span class="nav-text">Gold & Precious Metals</span></a></li>
+            <li><a href="#real-estate"><i class="fa-solid fa-city"></i> <span class="nav-text">Real Estate Outlook</span></a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        
+        <header class="hero">
+            <h1>Value Investing Q&A</h1>
+            <p>Interactive executive summary and strategic market insights generated from the recent ADNOC & Al Ramz webinar.</p>
+        </header>
+
+        <div class="content-container">
+
+            <div class="data-card">
+                <div class="data-card-text">
+                    <h4>Recommended Asset Allocation (Age 40)</h4>
+                    <p>A balanced profile targeting steady growth and downside protection. Global Equity (40%), UAE/GCC Equity (20%), Fixed Income (20%), Real Estate (10%), Gold (7%), Crypto (3%).</p>
+                </div>
+                <div class="data-card-visual">
+                    <i class="fa-solid fa-chart-pie" style="font-size: 3rem; margin-right: 15px;"></i>
+                    [ Interactive Chart Area ]
+                </div>
+            </div>
+
+            <section id="general" class="qa-section">
+                <h3>General Investment Guidance</h3>
+                
+                <div class="accordion-item">
+                    <button class="accordion-btn">
+                        <span>Please guide us as an employee, what is good for our investment or buying and selling?</span>
+                        <div class="accordion-icon"><i class="fa-solid fa-plus"></i></div>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            For salaried employees, long-term systematic investment is more suitable than active trading. Frequent buying and selling requires significant time, market expertise and a higher risk tolerance that may not align with a regular work schedule.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-btn">
+                        <span>How to start investing? And what is the minimum investment required?</span>
+                        <div class="accordion-icon"><i class="fa-solid fa-plus"></i></div>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            Begin by opening a brokerage account with a regulated platform such as Al Ramz Capital, completing the required suitability documentation. Practical starting points vary by asset class: UAE equities are accessible from AED 5,000–10,000, while ETFs can be purchased on a per-unit basis and mutual funds carry fund-specific minimums.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <button class="accordion-btn">
+                        <span>What is the best asset allocation do you recommend in your opinion? For a monthly contributor.</span>
+                        <div class="accordion-icon"><i class="fa-solid fa-plus"></i></div>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            The optimal allocation depends on your individual risk profile, but a balanced approach typically involves diversification across global equity, UAE equity, fixed income, gold, and small alternative positions. Consistent monthly contributions help smooth market entry points over time.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="uae-markets" class="qa-section">
+                <h3>UAE Markets & ADNOC</h3>
+                
+                <div class="accordion-item">
+                    <button class="accordion-btn">
+                        <span>Why should I invest in UAE markets with low returns vs international markets of multiple returns?</span>
+                        <div class="accordion-icon"><i class="fa-solid fa-plus"></i></div>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            UAE markets offer lower volatility, strong dividend yields of 5–7% and the benefit of sovereign-backed entities, which provides capital preservation qualities. International markets offer higher growth potential but come with significantly higher valuation risk and currency exposure.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-btn">
+                        <span>I like ADNOC Drilling because whatever ADNOC does they will have a role in the value chain. What do you think?</span>
+                        <div class="accordion-icon"><i class="fa-solid fa-plus"></i></div>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            ADNOC Drilling has strong backlog visibility and a strategically important role in the upstream capex cycle. Its performance is closely linked to rig expansion plans and ADNOC's broader production targets, making it a structurally sound holding within the group.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="gold" class="qa-section">
+                <h3>Gold & Precious Metals</h3>
+                
+                <div class="accordion-item">
+                    <button class="accordion-btn">
+                        <span>Is the Gold becoming the value storing currency tool and the dollar becoming the value exchange currency?</span>
+                        <div class="accordion-icon"><i class="fa-solid fa-plus"></i></div>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            This framing is broadly accurate, gold is increasingly used as a reserve diversification asset by sovereign institutions, while the USD retains its primacy as the world's primary settlement and transaction currency. The two roles are complementary rather than mutually exclusive.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <button class="accordion-btn">
+                        <span>Would you say an averaging method in buying gold or blue chips is good?</span>
+                        <div class="accordion-icon"><i class="fa-solid fa-plus"></i></div>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            Yes. Dollar-cost averaging is a sound strategy for both gold and blue-chip equities as it reduces the risk of poor market timing and smooths the average cost of entry over time. This approach is particularly well-suited to salaried investors making regular monthly allocations.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="real-estate" class="qa-section">
+                <h3>Real Estate (UAE & Strategy)</h3>
+                
+                <div class="accordion-item">
+                    <button class="accordion-btn">
+                        <span>Is there a bubble in the UAE real estate market?</span>
+                        <div class="accordion-icon"><i class="fa-solid fa-plus"></i></div>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            At present, mortgage-to-GDP ratios remain moderate and bank exposure to real estate is controlled, while demand continues to be supported by expatriate inflows. There are pockets of speculation, particularly in off-plan segments, but system-wide leverage does not yet indicate the conditions of a classic credit-driven bubble.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Accordion Logic
+            const accordions = document.querySelectorAll(".accordion-btn");
+
+            accordions.forEach(btn => {
+                btn.addEventListener("click", function() {
+                    // Close all other accordions
+                    accordions.forEach(otherBtn => {
+                        if (otherBtn !== this && otherBtn.classList.contains("active")) {
+                            otherBtn.classList.remove("active");
+                            otherBtn.nextElementSibling.style.maxHeight = null;
+                        }
+                    });
+
+                    // Toggle current accordion
+                    this.classList.toggle("active");
+                    const content = this.nextElementSibling;
+                    
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    }
+                });
+            });
+
+            // Highlight Active Nav Link on Scroll
+            const sections = document.querySelectorAll("section");
+            const navLinks = document.querySelectorAll(".nav-links a");
+
+            window.addEventListener("scroll", () => {
+                let current = "";
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= (sectionTop - 150)) {
+                        current = section.getAttribute("id");
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove("active");
+                    if (link.getAttribute("href").includes(current)) {
+                        link.classList.add("active");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
